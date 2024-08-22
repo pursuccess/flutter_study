@@ -68,16 +68,8 @@ class _MyHomePageState extends State<MyHomePage> {
         page = FavoritesPage();
         break;
       case 2: 
-        page = Wrap(
-          direction: Axis.horizontal,
-          runSpacing: 8,
-          spacing: 8,
-          children: const [
-            ExampleDragTarget(),
-            ExampleDragTarget(),
-            ExampleDragTarget()
-          ],
-        );
+        page = ExampleDragTarget();
+        
         break;
       default:
         throw UnimplementedError('no widget for $selectedIndex');
@@ -86,6 +78,9 @@ class _MyHomePageState extends State<MyHomePage> {
     return LayoutBuilder(
       builder: (context, constraints) {
         return Scaffold(
+        appBar: AppBar(
+          title: Text("Context测试"),
+        ),
           body: Row(
             children: [
               SafeArea(
@@ -116,10 +111,15 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               Expanded(
                 child: Container(
+                padding: const EdgeInsets.all(30),
+                color: Colors.red,
+                child: Container(
+                  padding: const EdgeInsets.all(3),
                   color: Theme.of(context).colorScheme.primaryContainer,
                   child: page,
                 ),
               ),
+            ),
             ],
           ),
         );
@@ -140,6 +140,39 @@ class GeneratorPage extends StatelessWidget {
     } else {
       icon = Icons.favorite_border;
     }
+
+    Scaffold? scaffold = context.findAncestorWidgetOfExactType<Scaffold>();
+    // 直接返回 AppBar的title， 此处实际上是Text("Context测试")
+    if (scaffold != null && scaffold.appBar != null) {
+      print((scaffold.appBar as AppBar).title);
+    }
+
+    Container? row = context.findAncestorWidgetOfExactType<Container>();
+    print(row);
+
+    Stream.fromFutures([
+      // 1秒后返回结果
+      Future.delayed(Duration(seconds: 1), () {
+        print(DateTime.now());
+        return "hello 1";
+      }),
+      // 抛出一个异常
+      Future.delayed(Duration(seconds: 2), () {
+        print(DateTime.now());
+        throw AssertionError("Error");
+      }),
+      // 3秒后返回结果
+      Future.delayed(Duration(seconds: 3), () {
+        print(DateTime.now());
+        return "hello 3";
+      })
+    ]).listen((data) {
+      print(data);
+    }, onError: (e) {
+      print('error: ${e.message}');
+    }, onDone: () {
+      print('onDone');
+    });
 
     return Center(
       child: Column(
@@ -228,8 +261,8 @@ class ExampleDragTarget extends StatefulWidget {
   const ExampleDragTarget({Key? key}) : super(key: key);
 
   @override
-  // State<ExampleDragTarget> createState() => _ExampleDragTargetState();
-  State<ExampleDragTarget> createState() => DropPageState();
+  State<ExampleDragTarget> createState() => _ExampleDragTargetState();
+  // State<ExampleDragTarget> createState() => DropPageState();
 }
 
 class _ExampleDragTargetState extends State<ExampleDragTarget> {
@@ -367,3 +400,4 @@ class DropPageState extends State<ExampleDragTarget> {
     );
   }
 }
+
