@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_study/pages/ExampleDragTarget.dart';
 import 'package:flutter_study/route/route.dart';
 
 void main() {
@@ -21,6 +22,16 @@ class MyApp extends StatelessWidget {
       ),
       routes: Routes.routes,
       initialRoute: '/',
+      onGenerateRoute: (RouteSettings settings) {
+        return MaterialPageRoute(builder: (context) {
+          String? routeName = settings.name;
+          if (routeName == "/example-drag-target") {
+            print(routeName);
+            return ExampleDragTarget();
+          }
+          return Container(child: Text('默认路由页面'),);
+        });
+      },
     );
   }
 }

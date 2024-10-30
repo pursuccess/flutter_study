@@ -153,12 +153,14 @@ class GeneratorPage extends StatelessWidget {
             child: Text("open new route ExampleDragTarget"),
             onPressed: () async {
               //导航到新路由
-              var result = await Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) {
-                  return ExampleDragTarget();
-                }),
-              );
+              var result = await Navigator.pushNamed(context, "/example-drag-target", arguments: "hi");
+              
+              // var result = await Navigator.push(
+              //   context,
+              //   MaterialPageRoute(builder: (context) {
+              //     return ExampleDragTarget();
+              //   }),
+              // );
               print('ExampleDragTarget widget返回值：$result');
             },
           ),
